@@ -1,0 +1,99 @@
+swagger: '2.0'
+info:
+  description: Simple API to verify Number
+  title: Num Verify
+  version: v2
+  termsOfService: "https://numverify.com/"
+  contact:
+    email: "amit.a.panther@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  
+host: apilayer.net
+schemes:
+  - http
+basePath: /api
+  
+paths:
+  /validate:
+    get:
+      summary: Validate Phone
+      parameters:
+        - in: query
+          name: access_key
+          type: string
+          required: true
+        - in: query
+          name: number
+          required: true
+          type: string
+          default: 9807654321
+        - in: query
+          name: format
+          required: true
+          type: number
+          default: 1
+        - in: query
+          name: country_code
+          required: true
+          type: string
+          default: IN
+          
+      responses:
+        '200':
+          description: Success Responses
+          schema:
+            $ref: '#/definitions/phone'
+        '400':
+          description: needs access token
+          schema:
+            type: object
+            example: {
+                    "code": "invalid_credentials",
+                    "message": "You have to be logged in to perform this action."
+                  }
+        '401':
+          description: needs access token
+          schema:
+            type: object
+            example: {
+                    "code": "invalid_credentials",
+                    "message": "You have to be logged in to perform this action."
+                  }
+                  
+definitions:
+  phone:
+    type: object
+    properties:
+      valid:
+        type: boolean
+        example: true
+      number:
+        type: string
+        example: 14158586273
+      international_format:
+        type: string
+        example: +14158586273
+      carrier:
+        type: string
+        example: AT&T Mobility LLC
+      line_type:
+        type: string
+        example: mobile
+      error:
+        type: object
+        properties:
+          code:
+            type: number
+            example: 101
+          type:
+            type: string
+            example: invalid_access_key
+          info:
+            type: string
+            example: "You have not supplied a valid API Access Key. [Technical Support: support@apilayer.com]"
+
+externalDocs:
+  description: "Find out more about NumVerify API"
+  url: "https://numverify.com/"

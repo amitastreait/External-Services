@@ -1,0 +1,82 @@
+swagger: '2.0'
+info:
+  description: A Simple IP Address API which returns the current network IP address
+  title: Ipify
+  version: v2
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "amit.a.panther@gmail.com"
+    
+host: api.ipify.org
+schemes:
+  - https
+basePath: /
+
+paths:
+  /:
+    get:
+      produces:
+        - application/json
+      summary: Get client IP
+      parameters:
+        - in: query
+          name: format
+          type: string
+          description: 'The format to return the response in, i.e. json.'
+          default: json
+          required: true
+      responses:
+        '400':
+          description: Error response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                default: "Resource not found"
+        '404':
+          description: Error response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                default: "Resource not found"
+          
+        '200':
+          description: Success response
+          schema:
+            $ref: "#/definitions/ip"
+                
+definitions:   
+  ip:
+    type: object
+    properties:
+      ip:
+        type: string
+        default: 88.68.10.107
+      name:
+        type: string
+        default: "Amit Singh"
+  user:
+    type: object
+    properties:
+      ip:
+        type: string
+        default: 88.68.10.107
+      name:
+        type: string
+        default: "Amit Singh"
+  ticket:
+    type: object
+    properties:
+      ip:
+        type: string
+        default: 88.68.10.107
+      name:
+        type: string
+        default: "Amit Singh"
+        
+externalDocs:
+  description: "Find out more about ipify"
+  url: "https://www.ipify.org/"

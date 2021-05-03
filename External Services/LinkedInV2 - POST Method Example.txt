@@ -1,0 +1,181 @@
+
+swagger: '2.0'
+info:
+  description: A Simple Swagger API to connect LinkedIn with Salesforce
+  title: LinkedIn
+  version: v1
+  termsOfService: "https://www.linkedin.com/legal/user-agreement"
+  contact:
+    email: "amit.a.panther@gmail.com"
+  
+host: api.linkedin.com
+schemes:
+  - https
+basePath: /v2
+
+security: 
+  - linkedin_oauth: 
+    - r_liteprofile
+    - r_emailaddress
+    - w_member_social
+
+paths:
+  /me:
+    get:
+      tags:
+      - "LinkedIn API"
+      produces:
+        - applicatiobn/json
+      summary: Get User Details
+      responses:
+        '200':
+          description: Success response
+          schema:
+            $ref: "#/definitions/user"
+        '400':
+          description: error description
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: unauthorize error
+  /ugcPosts:
+    post:
+      tags:
+        - "LinkedIn API"
+      produces:
+        - applicatiobn/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema: 
+            example: {
+                        "author": "urn:li:organization:5590506",
+                        "lifecycleState": "PUBLISHED",
+                        "specificContent": {
+                            "com.linkedin.ugc.ShareContent": {
+                                "media": [
+                                    {
+                                        "media": "urn:li:digitalmediaAsset:C5500AQG7r2u00ByWjw",
+                                        "status": "READY",
+                                        "title": {
+                                            "attributes": [],
+                                            "text": "Sample Video Create"
+                                        }
+                                    }
+                                ],
+                                "shareCommentary": {
+                                    "attributes": [],
+                                    "text": "Some share text"
+                                },
+                                "shareMediaCategory": "VIDEO"
+                            }
+                        },
+                        "targetAudience": {
+                            "targetedEntities": [
+                                {
+                                    "locations": [
+                                        "urn:li:country:us",
+                                        "urn:li:country:gb"
+                                    ],
+                                    "seniorities": [
+                                        "urn:li:seniority:3"
+                                    ]
+                                }
+                            ]
+                        },
+                        "visibility": {
+                            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+                        }
+                    }
+      summary: Makes a Post to Users Timeline
+      responses:
+        '200':
+          description: Success response
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: Post Created
+        '400':
+          description: error description
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: unauthorize error
+        '401':
+          description: error description
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: unauthorize error
+        '404':
+          description: error description
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: Resource Not Found
+          
+                
+securityDefinitions:
+
+  linkedin_oauth:
+    type: "oauth2"
+    authorizationUrl: "https://www.linkedin.com/oauth/v2/authorization"
+    tokenUrl: "https://www.linkedin.com/oauth/v2/accessToken"
+    flow: "accessCode"
+    scopes:
+      r_liteprofile: "read linkedin profile"
+      r_emailaddress: "read your associated email address"
+      w_member_social: "read and write the post into linkedin"
+            
+definitions:  
+  ugcPost:
+    type: object
+    properties:
+      author:
+        type: string
+        example: "urn:li:organization:5590506"
+      lifecycleState: 
+        type: string
+        example : "PUBLISHED"
+  user:
+    type: object
+    properties:
+      localizedHeadline:
+        type: string
+        example: API Enthusiast at LinkedIn
+      vanityName:
+        type: string
+        example: bsmith
+      localizedFirstName:
+        type: string
+        example: Bob
+      localizedLastName:
+        type: string
+        example: Smith
+      id:
+        type: string
+        example: yrZCpj2Z12
+      profilePicture:
+        type: object
+        properties:
+          displayImage:
+            type: string
+            example: urn:li:digitalmediaAsset:C4D00AAAAbBCDEFGhiJ
+  
+
+externalDocs:
+  description: "Find out more about LinkedIn API"
+  url: "https://www.linkedin.com/developers"

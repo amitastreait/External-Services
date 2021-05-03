@@ -1,0 +1,282 @@
+swagger: '2.0'
+info:
+  description: Freshdesk ticketing api
+  title: Freshdesk
+  version: v2
+  termsOfService: "https://www.freshworks.com/terms/"
+  contact:
+    email: "amit.a.panther@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  
+host: newaccount1611901507074.freshdesk.com
+schemes:
+  - https
+basePath: /api/v2
+
+security: 
+  - freshdesk_auth: []
+
+paths:
+  /tickets:
+    post:
+      tags:
+        - "Tickets"
+      summary: "Create a ticket"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/ticketNoId"
+      produces:
+        - application/json
+      consumes: 
+        - application/json
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: "#/definitions/ticket"
+        '201':
+          description: success response
+        '401':
+          description: unauthorized error
+        '403':
+          description: resource not found
+      
+    get:
+      tags:
+      - "Tickets"
+      parameters:
+        - in: query
+          name: email
+          type: string
+          default: "amit.a.panther@gmail.com"
+          required: false
+      produces:
+        - application/json
+      summary: Get All Tickets
+      responses:
+        '200':
+          description: Success response
+          schema:
+              $ref: "#/definitions/ticket"
+          examples:
+            type: array
+            itms:
+              $ref: "#/definitions/ticket"
+        '400':
+          description: error description
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: unauthorize error
+  
+  /tickets/{ID}:
+    get:
+      tags:
+        - "Tickets"
+      parameters:
+        - in: path
+          name: ID
+          type: string
+          required: true
+          default: 1
+      summary: Get a Single Ticket
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: "#/definitions/ticket"
+        '401':
+          description: needs access token
+          schema:
+            type: object
+            example: {
+                    "code": "invalid_credentials",
+                    "message": "You have to be logged in to perform this action."
+                  }
+    delete:
+      tags:
+        - "Tickets"
+      parameters:
+        - in: path
+          name: ID
+          type: string
+          required: true
+          default: 1
+      summary: delete a ticket
+      responses:
+        '204':
+          description: success response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: ticket deleted
+        '401':
+          description: needs access token
+          schema:
+            type: object
+            example: {
+                    "code": "invalid_credentials",
+                    "message": "You have to be logged in to perform this action."
+                  }
+                  
+  /contacts:
+    get:
+      tags:
+        - "Contacts"
+      summary: GET All Contacts
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success resonse
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/contact"
+        '401':
+            description: needs access token
+            schema:
+              type: object
+              example: {
+                      "code": "invalid_credentials",
+                      "message": "You have to be logged in to perform this action."
+                    }
+    post:
+      tags: 
+        - "Contacts"
+      summary: Creates a Contact
+      parameters:
+        - in: body
+          name: body
+          schema: 
+            $ref: '#/definitions/contactNoId'
+      consumes: 
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/contact'
+        '401':
+              description: needs access token
+              schema:
+                type: object
+                example: {
+                        "code": "invalid_credentials",
+                        "message": "You have to be logged in to perform this action."
+                      }
+      
+          
+                
+securityDefinitions:
+
+  freshdesk_auth:
+    type: basic
+            
+definitions:   
+  contact:
+    type: object
+    properties:
+      name: 
+        type: string
+        example: "Amit Singh"
+      email:
+        type: string
+        example: 'email@gmail.com'
+      phone:
+        type: string
+        example: '9087654321'
+      address:
+        type: string
+        example: 123 Main street, NY USA 29373
+      id:
+        type: string
+        example: 97384
+  
+  contactNoId:
+    type: object
+    properties:
+      name: 
+        type: string
+        example: "Amit Singh"
+      email:
+        type: string
+        example: 'email@gmail.com'
+      phone:
+        type: string
+        example: '9087654321'
+      address:
+        type: string
+        example: 123 Main street, NY USA 29373
+      
+  ticket:
+    type: object
+    properties:
+      priority:
+          type: number
+          example: 1
+      requester_id:
+          type: number
+          example: 1
+      responder_id:
+          type: number
+          example: 1
+      status:
+          type: number
+          example: 1
+      source:
+          type: number
+          example: 1
+      id:
+          type: number
+          example: 1
+      subject:
+          type: string
+          example: "Please help"
+      description:
+        type: string
+        example: "ticket description"
+          
+  ticketNoId:
+    type: object
+    properties:
+      priority:
+          type: number
+          example: 4
+      requester_id:
+          type: number
+          example: 82011237928
+      status:
+          type: number
+          example: 3
+      source:
+          type: number
+          example: 7
+      subject:
+          type: string
+          example: "Please help swagger api"
+      description:
+        type: string
+        example: "ticket description"
+      cc_emails:
+        type: "array"
+        items:
+          example: "user@cc.com"
+  
+
+externalDocs:
+  description: "Find out more about Freshdesk API"
+  url: "https://developers.freshdesk.com/api/"

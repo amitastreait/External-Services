@@ -1,0 +1,85 @@
+swagger: '2.0'
+info:
+  description: A Simple Swagger API to connect LinkedIn with Salesforce
+  title: LinkedIn
+  version: v1
+  termsOfService: "https://www.linkedin.com/legal/user-agreement"
+  contact:
+    email: "amit.a.panther@gmail.com"
+  
+host: api.linkedin.com
+schemes:
+  - https
+basePath: /v2
+
+security: 
+  - linkedin_oauth: 
+    - r_liteprofile
+    - r_emailaddress
+    - w_member_social
+
+paths:
+  /me:
+    get:
+      tags:
+      - "Linked API"
+      produces:
+        - applicatiobn/json
+      summary: Get User Details
+      responses:
+        '200':
+          description: Success response
+          schema:
+            $ref: "#/definitions/user"
+        '400':
+          description: error description
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: unauthorize error
+          
+                
+securityDefinitions:
+
+  linkedin_oauth:
+    type: "oauth2"
+    authorizationUrl: "https://www.linkedin.com/oauth/v2/authorization"
+    tokenUrl: "https://www.linkedin.com/oauth/v2/accessToken"
+    flow: "accessCode"
+    scopes:
+      r_liteprofile: "read linkedin profile"
+      r_emailaddress: "read your associated email address"
+      w_member_social: "read and write the post into linkedin"
+            
+definitions:   
+  user:
+    type: object
+    properties:
+      localizedHeadline:
+        type: string
+        example: API Enthusiast at LinkedIn
+      vanityName:
+        type: string
+        example: bsmith
+      localizedFirstName:
+        type: string
+        example: Bob
+      localizedLastName:
+        type: string
+        example: Smith
+      id:
+        type: string
+        example: yrZCpj2Z12
+      profilePicture:
+        type: object
+        properties:
+          displayImage:
+            type: string
+            example: urn:li:digitalmediaAsset:C4D00AAAAbBCDEFGhiJ
+  
+
+externalDocs:
+  description: "Find out more about LinkedIn API"
+  url: "https://www.linkedin.com/developers"

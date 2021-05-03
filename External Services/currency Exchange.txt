@@ -1,0 +1,136 @@
+swagger: '2.0'
+info:
+  description: Currency Exchange API
+  title: Exchange
+  version: v1.0.0
+  termsOfService: "https://www.exchangerate-api.com/terms"
+  contact:
+    email: "amit.a.panther@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  
+host: v6.exchangerate-api.com
+schemes:
+  - https
+basePath: /v6/
+
+security:
+  - api_key: []
+
+paths:
+  /{apiKey}/pair/{code1}/{code2}/{amount}:
+    get:
+      tags:
+        - "Pair Conversion"
+      parameters:
+       - in: path
+         name: code1
+         type: string
+         required: true
+         default: USD
+       - in: path
+         name: code2
+         type: string
+         required: true
+         default: USD
+       - in: path
+         name: amount
+         type: number
+         required: true
+         default: 723
+       - in: path
+         name: apiKey
+         type: string
+         required: true
+         default: d04cf212b1fd9f335152cb03
+      summary: PAIR Conversion
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/pair_rates'
+  /{apiKey}/latest/{ccode}:
+    get:
+      tags:
+        - "Currency"
+      summary: "Currency Conversion Rate"
+      parameters:
+        - in: path
+          name: ccode
+          type: string
+          required: true
+          default: USD
+        - in: path
+          name: apiKey
+          type: string
+          required: true
+          default: d04cf212b1fd9f335152cb03
+      produces:
+        - application/json
+      consumes: 
+        - application/json
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/rates'
+        '401':
+          description: unauthorized error
+        '403':
+          description: resource not found
+            
+definitions:   
+  rates:
+    type: object
+    properties:
+      result: 
+        type: string
+        example: success
+      documentation:
+        type: string
+        example: "https://www.exchangerate-api.com/docs"
+      terms_of_use:
+        type: string
+        example: 'https://www.exchangerate-api.com/terms'
+      time_last_update_utc:
+        type: string
+        example: "Wed, 03 Feb 2021 00:00:02 +0000"
+      base_code:
+        type: string
+        example: USD
+      conversion_rates:
+        type: object
+        
+  pair_rates:
+    type: object
+    properties:
+      result: 
+        type: string
+        example: success
+      documentation:
+        type: string
+        example: "https://www.exchangerate-api.com/docs"
+      terms_of_use:
+        type: string
+        example: 'https://www.exchangerate-api.com/terms'
+      target_code:
+        type: string
+        example: GBP
+      conversion_result:
+        type: number
+        example: 234
+      conversion_rate: 
+        type: number
+        example: .34
+        
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "query"
+  
+
+externalDocs:
+  description: "Find out more about Exchange API"
+  url: "https://www.exchangerate-api.com/docs/overview"
